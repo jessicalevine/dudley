@@ -1,2 +1,3 @@
 source :rubygems
-gem "Ruby-IRC", "~> 1.0.13"
+
+gem "Ruby-IRC"
