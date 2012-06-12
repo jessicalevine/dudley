@@ -1,0 +1,10 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    Ruby-IRC (1.0.13)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  Ruby-IRC
