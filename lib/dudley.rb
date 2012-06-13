@@ -10,6 +10,7 @@ require 'dudley/config'
 require 'dudley/patches/hash'
 
 module Dudley
+  VERSION    = "0.1"
   ROOTDIR    = File.expand_path(File.dirname(__FILE__) + '/..')
   SPECDIR    = ROOTDIR + '/spec'
   DATADIR    = SPECDIR + '/data'
