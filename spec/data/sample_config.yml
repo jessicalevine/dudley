@@ -1,0 +1,5 @@
+server:
+  host: 192.168.1.131
+  port: 6667
+  nick: dudley
+  realname: Mr Bot
