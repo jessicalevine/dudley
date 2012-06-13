@@ -4,24 +4,21 @@ describe Dudley::DiceParser do
   it "should correctly parse simple dice rolls" do
     100.times do
       result = Dudley::DiceParser.parse("1d6")
-      result.should be >= 1
-      result.should be <= 6
+      result.should be_within 1..6
     end
   end
 
   it "should correctly parse simple dice rolls with modifier" do
     100.times do
       result = Dudley::DiceParser.parse("1d6 + 5")
-      result.should be >= 6
-      result.should be <= 11
+      result.should be_within 6..11
     end
   end
 
   it "should correctly parse multiple simple dice rolls with modifier" do
     100.times do
       result = Dudley::DiceParser.parse("1d6+5,1d4, 1d8+2")
-      result.should be >= 10
-      result.should be <= 25
+      result.should be_within 10..25
     end
   end
 
