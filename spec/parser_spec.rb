@@ -44,4 +44,11 @@ describe Dudley::DiceParser do
     result = Dudley::DiceParser.parse("1d4c+4")
     result.should be_nil
   end
+
+  it "should return nil when given invalidly formatted input" do
+    result = Dudley::DiceParser.parse("1+4d3")
+    result.should be_nil
+    result = Dudley::DiceParser.parse("1d4,+3")
+    result.should be_nil
+  end
 end
