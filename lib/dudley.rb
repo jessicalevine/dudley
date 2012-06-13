@@ -12,3 +12,6 @@ module Dudley
   DATADIR    = SPECDIR + '/data'
   CONFIG_LOC = ROOTDIR + '/.dudley.yml'
 end
+
+# Load the default configuration file
+Dudley::Config.load_config
