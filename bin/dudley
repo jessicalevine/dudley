@@ -18,7 +18,7 @@ module Dudley
   IRCEvent.add_callback('privmsg') do |event|
     if event.channel == '#' + Config[:server][:channel]
       if event.message.start_with?('!')
-        Command.execute bot, event.message
+        bot.send_message(event.channel, Command.execute(event.message))
       end
     end
   end

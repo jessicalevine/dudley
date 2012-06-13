@@ -7,7 +7,7 @@ module Dudley
        return DiceParser.parse input
      else
        return nil
-     end 
+     end
    end
   end
 end
