@@ -2,6 +2,8 @@ libdir = File.dirname(__FILE__)
 $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'IRC'
+require 'dudley/dice_parser'
+require 'pry'
 require 'yaml'
 require 'dudley/config'
 require 'dudley/patches/hash'
