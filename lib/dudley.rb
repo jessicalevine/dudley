@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'IRC'
 require 'dudley/dice_parser'
+require 'dudley/command'
 require 'pry'
 require 'yaml'
 require 'dudley/config'
