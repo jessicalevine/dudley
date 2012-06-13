@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require File.dirname(__FILE__) + '/../lib/dudley'
+
+module Dudley
+  s   = Config[:server]
+  bot = IRC.new(s[:nick], s[:host], s[:port], s[:realname])
+
+  # When the end of the message of the day for the server has been reached,
+  # connect to the channel supplied in the config file.
+  IRCEvent.add_callback('endofmotd') do |event|
+    bot.add_channel('#' + Config[:server][:channel])
+  end
+
+  # IRC channels receive private messages every time someone speaks in that
+  # channel. Here, we're hooking into that fact to parse all messages that
+  # flow through the current channel.
+  IRCEvent.add_callback('privmsg') do |event|
+    if event.channel == '#' + Config[:server][:channel]
+      if event.message.start_with?('!')
+        bot.send_message(event.channel, Command.execute(event.message))
+      end
+    end
+  end
+
+  # Connect to the server
+  bot.connect
+end
