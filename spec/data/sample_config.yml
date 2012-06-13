@@ -3,3 +3,4 @@ server:
   port: 6667
   nick: dudley
   realname: Mr Bot
+  channel: dnd
