@@ -1,0 +1,11 @@
+# Below is an example server configuration. You can specify a host, port,
+# nickname, real name and channel for the bot to join. Please note that the
+# channel is not prefixed with a hash. The hash will be added for you. This is
+# an inherent limitation to using YAML for configuration :)
+#
+#   server:
+#       host: irc.example.com
+#       port: 6667
+#       nick: dudley
+#       realname: Mr Dudley
+#       channel: dnd
