@@ -1,13 +1,26 @@
 libdir = File.dirname(__FILE__)
 $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
+# Require all of the Ruby files in the given directory.
+#
+# path - The String relative path from here to the directory.
+#
+# Returns nothing.
+def require_all(path)
+  glob = File.join(File.dirname(__FILE__), path, '*.rb')
+  Dir[glob].each do |f|
+    require f
+  end
+end
+
 require 'IRC'
-require 'dudley/dice_parser'
-require 'dudley/command'
 require 'pry'
 require 'yaml'
-require 'dudley/config'
-require 'dudley/patches/hash'
+
+require_all 'dudley'
+require_all 'dudley/errors'
+require_all 'dudley/patches'
+require_all 'dudley/commands'
 
 module Dudley
   VERSION    = "0.1"
