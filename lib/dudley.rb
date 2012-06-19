@@ -31,4 +31,9 @@ module Dudley
 end
 
 # Load the default configuration file
-Dudley::Config.load_config
+begin
+  Dudley::Config.load_config
+rescue Dudley::ConfigurationFileNotFound => e
+  puts e.message
+  exit
+end
