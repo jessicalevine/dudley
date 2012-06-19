@@ -9,4 +9,10 @@ describe Dudley::Config do
     Dudley::Config[:server].should be_a Hash
     Dudley::Config[:server][:host].should == "192.168.1.131"
   end
+
+  it "should throw an exception when missing config file" do
+    lambda do
+      Dudley::Config.load_config(Dudley::DATADIR + '/no/such/config.yml')
+    end.should raise_error Dudley::ConfigurationFileNotFound
+  end
 end
