@@ -3,48 +3,61 @@
 require File.expand_path(File.dirname(__FILE__) + '/../lib/dudley')
 
 module Dudley
-  s   = Config[:server]
+  begin
+    s   = Config[:server]
 
-  # If no server configuration exists, die horribly with a ridiculous error
-  # message... Just kidding, exit gracefully and explain why :)
-  unless s
-    log.error "No server configuration was found. Please check your " +
-      "configuration file and try again."
-    exit 1
-  end
+    # If no server configuration exists, die horribly with a ridiculous error
+    # message... Just kidding, exit gracefully and explain why :)
+    unless s
+      log.error "No server configuration was found. Please check your " +
+        "configuration file and try again."
+      exit 1
+    end
 
-  bot = IRC.new(s[:nick], s[:host], s[:port], s[:realname])
+    bot = IRC.new(s[:nick], s[:host], s[:port], s[:realname])
 
-  # When the end of the message of the day for the server has been reached,
-  # connect to the channel supplied in the config file.
-  #
-  # If the server has no message of the day, this callback is not actually
-  # called. Make note of this. We may need to find a better callback.
-  IRCEvent.add_callback('endofmotd') do |event|
-    log.info "Joined server #{Config[:server][:host]}."
-    bot.add_channel(Config[:server][:channel])
-  end
+    # When the end of the message of the day for the server has been reached,
+    # connect to the channel supplied in the config file.
+    #
+    # If the server has no message of the day, this callback is not actually
+    # called. Make note of this. We may need to find a better callback.
+    IRCEvent.add_callback('endofmotd') do |event|
+      log.info "Joined server #{Config[:server][:host]}."
+      bot.add_channel(Config[:server][:channel])
+    end
 
-  # IRC channels receive private messages every time someone speaks in that
-  # channel. Here, we're hooking into that fact to parse all messages that
-  # flow through the current channel.
-  IRCEvent.add_callback('privmsg') do |event|
-    if event.channel == Config[:server][:channel]
-      if event.message.start_with?('!')
-        log.debug "Received command: #{event.message}"
+    # IRC channels receive private messages every time someone speaks in that
+    # channel. Here, we're hooking into that fact to parse all messages that
+    # flow through the current channel.
+    IRCEvent.add_callback('privmsg') do |event|
+      if event.channel == Config[:server][:channel]
+        if event.message.start_with?('!')
+          log.debug "Received command: #{event.message}"
 
-        begin
-          message = Command.execute(event.message)
-        rescue Exception => e
-          message = e.message
+          begin
+            message = Command.execute(event.message)
+          rescue Exception => e
+            message = e.message
+          end
+
+          bot.send_message(event.channel, message)
         end
-
-        bot.send_message(event.channel, message)
       end
     end
-  end
 
-  # Connect to the server
-  log.info "Attempting to connect to #{s[:host]}:#{s[:port]}..."
-  bot.connect
+    # Connect to the server
+    log.info "Attempting to connect to #{s[:host]}:#{s[:port]}..."
+    bot.connect
+  rescue SystemExit, Interrupt
+    # Catch ctrl + c exits. Doesn't actually run at the moment because of the
+    # argument error that Ruby-IRC throws >_>
+    log.info "Interrupted. Sending quit message."
+    bot.send_quit
+  rescue ArgumentError => e
+    # For some reason, Ruby-IRC sends an argument error when it exits. This
+    # catches it and exits gracefully.
+
+    log.info "Sending quit message."
+    bot.send_quit
+  end
 end
