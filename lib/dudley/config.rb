@@ -15,11 +15,27 @@ module Dudley
       begin
         yaml_file = YAML.load_file(config_path || Dudley::CONFIG_LOC)
       rescue Exception => e
-        raise ConfigurationFileNotFound.new("No configuration file found at #{CONFIG_LOC}. Have you made a configuration file?")
+        raise ConfigurationFileNotFound.new("No configuration file found at " +
+                          "#{CONFIG_LOC}. Have you made a configuration file?")
       end
 
       yaml_file.symbolize_keys!
+
+      # Set some default behaviour
+      #
+      # Add a hash symbol to the start of a channel if the first character is
+      # alphanumeric.
+      if yaml_file[:server] and yaml_file[:server][:channel] and
+         yaml_file[:server][:channel] =~ /^[a-zA-Z]/
+        yaml_file[:server][:channel] = '#' + yaml_file[:server][:channel]
+      end
+
       config.merge!(yaml_file)
+    end
+
+    # Resets the configuration to an empty hash. Primarily for testing purposes.
+    def self.reset_config
+      config = Hash.new(nil)
     end
 
     private
