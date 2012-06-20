@@ -3,9 +3,21 @@
 require File.expand_path(File.dirname(__FILE__) + '/../lib/dudley')
 
 module Dudley
+  OptionParser.new do |opts|
+    opts.banner = "Usage: dudley [options]"
+
+    opts.on('-d', '--debug', 'Run with debug message.') do
+      Config[:debug] = true
+    end
+
+    opts.on('-h', '--help', 'Show this message.') do
+      puts opts
+      exit
+    end
+  end.parse!
+
   begin
-    s   = Config[:server]
-    puts s
+    s = Config[:server]
 
     # If no server configuration exists, die horribly with a ridiculous error
     # message... Just kidding, exit gracefully and explain why :)
@@ -27,6 +39,10 @@ module Dudley
       bot.add_channel(Config[:server][:channel])
     end
 
+    IRCEvent.add_callback('join') do |event|
+      log.info "Joined channel #{event.channel}."
+    end
+
     # IRC channels receive private messages every time someone speaks in that
     # channel. Here, we're hooking into that fact to parse all messages that
     # flow through the current channel.
@@ -37,8 +53,10 @@ module Dudley
 
           begin
             message = Command.execute(event.message)
+            log.debug "Command executed successfully. Result: #{message}"
           rescue Exception => e
             message = e.message
+            log.debug "Command produced an error. Message: #{message}"
           end
 
           bot.send_message(event.channel, message)

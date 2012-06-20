@@ -17,7 +17,9 @@ module Dudley
     logfile = Config[:logfile]
     logfile = STDOUT if logfile =~ /\Astdout\z/i
     logfile = STDERR if logfile =~ /\Astderr\z/i
+
     logger = Logger.new(logfile)
+    logger.level = Config[:debug] ? Logger::DEBUG : Logger::INFO
 
     logger.formatter = proc do |severity, datetime, progname, msg|
       result = "[#{severity.ljust(5)} #{datetime}]: #{msg}\n"

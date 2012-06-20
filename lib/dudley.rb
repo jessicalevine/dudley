@@ -18,6 +18,7 @@ require 'pry'
 require 'yaml'
 require 'colored'
 require 'logger'
+require 'optparse'
 
 require_all 'dudley'
 require_all 'dudley/errors'
