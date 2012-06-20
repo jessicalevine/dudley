@@ -32,4 +32,15 @@ describe Dudley::Config do
 
     Dudley::Config[:server][:channel].should_not start_with('#')
   end
+
+  it "should correctly merge new configs on top of old ones" do
+    # There was a bug when merging configs on top of each other when there were
+    # nested hashes. The nested hashes would replace each other instead of
+    # merging. It was fixed and this is the test to make sure it stays fixed.
+    Dudley::Config.load_config({ :testing => { :value_1 => 12 } })
+    Dudley::Config.load_config({ :testing => { :value_2 => 10 } })
+
+    Dudley::Config[:testing][:value_1].should == 12
+    Dudley::Config[:testing][:value_2].should == 10
+  end
 end
