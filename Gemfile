@@ -1,6 +1,7 @@
 source :rubygems
 
 gem 'Ruby-IRC'
+gem 'colored'
 
 group :testing do
   gem 'rspec'

@@ -33,6 +33,14 @@ module Dudley
       config.merge!(yaml_file)
     end
 
+    # Loads a YAML file filled with defaults for the dudley configuration. This
+    # should be called before any other config files are loaded.
+    def self.load_defaults
+      yaml_file = YAML.load_file(Dudley::DEFAULTS_LOC)
+      yaml_file.symbolize_keys!
+      config.merge!(yaml_file)
+    end
+
     # Resets the configuration to an empty hash. Primarily for testing purposes.
     def self.reset_config
       config = Hash.new(nil)
@@ -42,6 +50,13 @@ module Dudley
 
     def self.config
       @@config ||= Hash.new(nil)
+    end
+
+    def self.default key
+      case key
+      when :logfile
+        STDOUT
+      end
     end
   end
 end

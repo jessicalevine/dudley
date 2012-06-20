@@ -4,11 +4,24 @@ require File.expand_path(File.dirname(__FILE__) + '/../lib/dudley')
 
 module Dudley
   s   = Config[:server]
+
+  # If no server configuration exists, die horribly with a ridiculous error
+  # message... Just kidding, exit gracefully and explain why :)
+  unless s
+    log.error "No server configuration was found. Please check your " +
+      "configuration file and try again."
+    exit 1
+  end
+
   bot = IRC.new(s[:nick], s[:host], s[:port], s[:realname])
 
   # When the end of the message of the day for the server has been reached,
   # connect to the channel supplied in the config file.
+  #
+  # If the server has no message of the day, this callback is not actually
+  # called. Make note of this. We may need to find a better callback.
   IRCEvent.add_callback('endofmotd') do |event|
+    log.info "Joined server #{Config[:server][:host]}."
     bot.add_channel(Config[:server][:channel])
   end
 
@@ -18,6 +31,8 @@ module Dudley
   IRCEvent.add_callback('privmsg') do |event|
     if event.channel == Config[:server][:channel]
       if event.message.start_with?('!')
+        log.debug "Received command: #{event.message}"
+
         begin
           message = Command.execute(event.message)
         rescue Exception => e
@@ -30,5 +45,6 @@ module Dudley
   end
 
   # Connect to the server
+  log.info "Attempting to connect to #{s[:host]}:#{s[:port]}..."
   bot.connect
 end
