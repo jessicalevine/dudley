@@ -74,20 +74,22 @@ located in the `lib/dudley/commands/` directory. Let's take a look at the
 existing `!roll` command as an example:
 
 ``` ruby
-    module Dudley::Commands
-      class Roll < Command
-        command :roll do |input|
-          DiceParser.parse input
-        end
+module Dudley
+  module Commands
+    class Roll < Command
+      command :roll do |input|
+        DiceParser.parse input
+      end
 
-        namespace :roll do
-          command :init do |input|
-            # Stub for rolling init.
-            "Implement me!"
-          end
+      namespace :roll do
+        command :init do |input|
+          # Stub for rolling init.
+          "Implement me!"
         end
       end
     end
+  end
+end
 ```
 
 Commands must subclass the `Dudley::Commands::Command` class. Doing so gives you
