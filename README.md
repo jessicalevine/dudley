@@ -92,7 +92,7 @@ module Dudley
 end
 ```
 
-Commands must subclass the `Dudley::Commands::Command` class. Doing so gives you
+Commands must subclass the `Dudley::Command` class. Doing so gives you
 access to the `namespace` and `command` helper methods to form a mini-DSL for
 creating Dudley commands.
 
